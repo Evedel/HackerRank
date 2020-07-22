@@ -10,47 +10,53 @@ import (
 )
 
 // Complete the sockMerchant function below.
-func sockMerchant(n int32, k int32, arr []int32) int32 {
-    tmp   := arr[:]
-    pairs := []int{}
-    res   := 0
-    for i := 0; i < len(tmp); i++ { pairs = append(pairs,0) }
-    
-    for len(tmp) > 0 {
-        for i := 0; i < len(tmp); i++ { pairs[i] = 0 }
+// Given a set of distinct integers,
+// print the size of a maximal subset of S'
+// where the sum of any 2 numbers in S' is not evenly divisible by k.
+// 
+// For example, the array S=[19,10,12,10,24,25,22] and k=4.
+// One of the arrays that can be created is S'=[10,15,25].
+// Another is S''=[19,22,24]. After testing all permutations,
+// the maximum length solution array has 3 elements.
+// 
+// https://www.hackerrank.com/challenges/non-divisible-subset/problem
+//
+//  O(n)
+//
+func sockMerchant(n int, k int, arr []int32) int {
+    hasZeroRems := false
+    hasHalfRems := false
+    rems := []int{}
+    // (a + b)%k == 0 --> a%k + b%k = c%k == 0 || a%k + b%k = k
 
-        for i := 0; i < len(tmp); i++ {
-            for j := i+1; j < len(tmp); j++ {
-                if (tmp[i]+tmp[j])%k == 0 {
-                    pairs[i] += 1
-                    pairs[j] += 1
-                }
-            }
+    // arr [1,7,4,2] to reminders only [1,1,1,2]
+    for _, a := range(arr) {
+        rems = append(rems, int(a)%k)
+        if (rems[len(rems)-1] ==  0) {hasZeroRems = true}
+        if (k%2 == 0) && (rems[len(rems)-1] == int(k/2)) {hasHalfRems = true}
+    }
+
+    // [1,1,1,2] need to match pairs to; i.e. 1+2 = 4%3+2%3 only one can be left
+    gn := 0
+    for rk:= 1; float32(rk) < float32(k)/2; rk++ {
+        lk := k - rk
+        nrk := 0
+        nlk := 0
+        for i := range(rems) {
+            if (rems[i] == rk) {nrk += 1}
+            if (rems[i] == lk) {nlk += 1}
         }
-        fmt.Print(pairs, "\n")
-        maxI := -1
-        maxV :=  0
-        for i := 0; i < len(tmp); i++ {
-            if pairs[i] > maxV {
-                maxI = i
-                maxV = pairs[i]
-            }
-        }
-        if (maxI != -1) {
-            tmp = append(tmp[:maxI], tmp[maxI+1:]...)
-            pairs = append(pairs[:maxI], pairs[maxI+1:]...)
+        if (nrk > nlk) {
+            gn += nrk
         } else {
-            return int32(len(tmp) + res)
-        }
-        for i := len(tmp)-1; i >= 0; i-- {
-            if pairs[i] == 0 {
-                res += 1
-                tmp = append(tmp[:i], tmp[i+1:]...)
-                pairs = append(pairs[:i], pairs[i+1:]...)
-            }
+            gn += nlk
         }
     }
-    return int32(0)
+    // [3, 3, 3, 3] && k = 3   --> rems=[0,0,0,0] ---> only one can be left
+    // [2, 6, 10, 14] && k = 4 --> rems=[2,2,2,2] ---> only one can be left
+    if (hasZeroRems) {gn += 1}
+    if (hasHalfRems) {gn += 1}
+    return gn
 }
 
 func main() {
@@ -66,11 +72,11 @@ func main() {
     inputTemp := strings.Split(readLine(reader), " ")
     nTemp, err := strconv.ParseInt(inputTemp[0], 10, 64)
     checkError(err)
-    n := int32(nTemp)
+    n := int(nTemp)
 
     kTemp, err := strconv.ParseInt(inputTemp[1], 10, 64)
     checkError(err)
-    k := int32(kTemp)
+    k := int(kTemp)
 
     arTemp := strings.Split(readLine(reader), " ")
 
