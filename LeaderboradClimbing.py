@@ -51,7 +51,7 @@ def binSearch(ranks, score):
 # Those players will have ranks 1, 2, 2, and 3, respectively.
 # If Alice's scores are 70, 80 and 105, her rankings after each game are 4, 3 and 1.
 #
-# O(n+m*log(n))
+# O(2*n+m)
 #
 def climbingLeaderboard(scores, alice):
     ranks = {}
@@ -63,8 +63,20 @@ def climbingLeaderboard(scores, alice):
             ranks[irank] = scores[i]
     
     result = []
+    irank = len(ranks)
     for r in alice:
-        result.append(binSearch(ranks,r))
+        found = False
+        while not found:
+            if (r < ranks[irank]):
+                result.append(irank+1)
+                found = True
+            else:
+                if (irank > 1):
+                    irank -= 1
+                else:
+                    result.append(1)
+                    found = True
+        # result.append(binSearch(ranks,r))
     
     # print(ranks)
     return result
