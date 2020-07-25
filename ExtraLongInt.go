@@ -16,11 +16,25 @@ import (
 // n = 45 
 // factorial = 119622220865480194561963161495657715064383733760000000000
 func extraLongFactorials(n int) {
-    result := big.NewInt(int64(1))
+    arr := []int{}
+    arr = append(arr, 1)
     for i := 2; i <= n; i++ {
-        result = result.Mul(result, big.NewInt(int64(i)))
+        rem := 0
+        for j := 0; j < len(arr); j++ {
+            digit := arr[j]
+            digit *= i
+            digit += rem
+            arr[j] = digit%10
+            rem = digit/10
+        }
+        for rem != 0 {
+            arr = append(arr, rem%10)
+            rem /= 10
+        }
     }
-    fmt.Print(result)
+    for i := len(arr)-1; i > -1; i-- {
+        fmt.Print(arr[i])
+    }
 }
 
 func main() {
