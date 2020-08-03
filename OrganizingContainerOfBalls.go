@@ -24,49 +24,51 @@ func afterSwapPrint(c [][]int, n,i,j,k,l int) {
 }
 
 // Complete the organizingContainers function below.
+// David has several containers, each with a number of balls in it.
+// He has just enough containers to sort each type of ball he has into its own container.
+// David wants to sort the balls using his sort method.
+// 
+// As an example, David has N containers and N different types of balls,
+// both of which are numbered from 1 to N.
+// The distribution of ball types per container are described by an NxN matrix of integers.
+// 
+// In a single operation, David can swap two balls located in different containers.
+// 
+// David wants to perform some number of swap operations such that:
+//      - Each container contains only balls of the same type.
+//      - No two balls of the same type are located in different containers.
+// You must perform N queries where each query is in the form of a matrix Q.
+// For each query, print "Possible" on a new line
+// if David can satisfy the conditions above for the given matrix.
+// Otherwise, print "Impossible".
+// 
+// https://www.hackerrank.com/challenges/organizing-containers-of-balls
+// 
+
 func organizingContainers(container [][]int) string {
     n := len(container)
     c := container
-    // afterSwapPrint(c,n,0,0,0,0)
-    // for each basket id && target ball id
+    totBalls := []int{}
+    totPlace := []int{}
     for i := 0; i < n; i++ {
-        // find out what is the number of wrong balls in this basket i
-        nwrongballs := 0
-        wrongballid := i+1
-        for k := i+1; k < n; k++ {
-            nwrongballs += c[i][k]
+        totPlace = append(totPlace,0)
+        for j := 0; j < n; j++ {
+            if (i == 0) {totBalls = append(totBalls,0)}
+            totPlace[i] += c[i][j]
+            totBalls[j] += c[i][j]
         }
-        // visit every other basket j
-        for j := i+1; j < n; j++ {
-            // if this basket j contains balls i, need to swap them for any in basket i
-            for c[j][i] != 0 {
-                // But if there is nothing to swap with => "NO"
-                if (nwrongballs == 0) {return "Impossible"}
-                swapballs := 0
-                if c[j][i] < nwrongballs {
-                    swapballs = c[j][i]
-                } else {
-                    swapballs = nwrongballs
-                }
-                if (swapballs > c[i][wrongballid]) {
-                    swapballs = c[i][wrongballid]
-                }
-                c[i][i] += swapballs
-                c[j][i] -= swapballs
-                c[j][wrongballid] += swapballs
-                c[i][wrongballid] -= swapballs
-
-                // afterSwapPrint(c,n,i,j,wrongballid,swapballs)
-                
-                nwrongballs -= swapballs
-                if c[i][wrongballid] == 0 {wrongballid += 1}
+    }
+    for i := 0; i < n; i++ {
+        foundPlace := false
+        for j := 0; j < n; j++ {
+            if (totBalls[i] == totPlace[j]) {
+                totPlace[j] = -1
+                foundPlace = true
+                break
             }
         }
-        // if after all the basket j were visited,
-        // we still have some wrong balls => "NO"
-        if (nwrongballs != 0) {return "Impossible"}
+        if (!foundPlace) {return "Impossible"}
     }
-    // If no mistakes => "YES"
     return "Possible"
 }
 
