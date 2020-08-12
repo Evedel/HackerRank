@@ -25,3 +25,20 @@ GROUP BY months*salary
 ORDER BY months*salary DESC
 LIMIT 1
 
+/* Query the total population of all cities in CITY where District is California. */
+SELECT SUM(population)
+FROM city
+WHERE district = 'California'
+
+/*
+	Query the Western Longitude (LONG_W) for the largest Northern Latitude (LAT_N)
+	in STATION that is less than 137.2345.
+	Round your answer to 4 decimal places.
+*/
+SELECT ROUND(LONG_W,4)
+FROM station
+WHERE LAT_N = (
+        SELECT MAX(LAT_N)
+        FROM station
+        WHERE LAT_N < 137.2345
+    )
