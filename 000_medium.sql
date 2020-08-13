@@ -115,3 +115,32 @@ GROUP BY RowNumber
 */
 SELECT ROUND(MAX(LAT_N) - MIN(LAT_N) + MAX(LONG_W) - MIN(LONG_W),4)
 FROM station
+
+/*
+	Amber's conglomerate corporation just acquired some new companies. Each of the companies follows this hierarchy:
+			Founder  =>  Lead Manager  =>  Senior Manager  =>  Manager  =>  Employee
+			
+	Given the table schemas below, write a query to print the
+		company_code, founder name, total number of lead managers, total number of senior managers, total number of managers, and total number of employees.
+		Order your output by ascending company_code.
+	Note:
+		- The tables may contain duplicate records.
+		- The company_code is string, so the sorting should not be numeric.
+		  For example, if the company_codes are C_1, C_2, and C_10,
+		  then the ascending company_codes will be C_1, C_10, and C_2.
+*/
+SELECT company_code as CCode, founder,
+    (SELECT COUNT(DISTINCT(lead_manager_code))
+     FROM Lead_Manager
+     WHERE company_code = CCode),
+    (SELECT COUNT(DISTINCT(senior_manager_code))
+     FROM Senior_Manager
+     WHERE company_code = CCode),
+    (SELECT COUNT(DISTINCT(manager_code))
+     FROM Manager
+     WHERE company_code = CCode),
+    (SELECT COUNT(DISTINCT(employee_code))
+     FROM Employee
+     WHERE company_code = CCode)
+FROM company
+ORDER BY CCode

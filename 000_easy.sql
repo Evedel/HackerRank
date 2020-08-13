@@ -42,3 +42,14 @@ WHERE LAT_N = (
         FROM station
         WHERE LAT_N < 137.2345
     )
+	
+/* Query the average population of all cities in CITY where District is California. */
+SELECT AVG(population)
+FROM city
+WHERE district = 'California'
+
+/* Query the difference between the maximum and minimum populations in CITY. */
+SELECT MAX(population) - MIN(population)
+FROM city
+
+
