@@ -52,4 +52,22 @@ WHERE district = 'California'
 SELECT MAX(population) - MIN(population)
 FROM city
 
+/*
+	Samantha was tasked with calculating the average monthly salaries for all employees in the EMPLOYEES table,
+	but did not realize her keyboard's 0 key was broken until after completing the calculation.
+	She wants your help finding the difference between her miscalculation (using salaries with any zeroes removed),
+	and the actual average salary.
 
+	Write a query calculating the amount of error (i.e.: 'actual' - 'miscalculated' average monthly salaries),
+	and round it up to the next integer.
+*/
+SELECT CEILING(AVG(salary) - AVG(REPLACE(salary,'0','')))
+FROM employees
+
+/*
+	Query the following two values from the STATION table:
+		- The sum of all values in LAT_N rounded to a scale of 2 decimal places.
+		- The sum of all values in LONG_W rounded to a scale of 2 decimal places.
+*/
+SELECT ROUND(SUM(lat_n),2), ROUND(SUM(long_w),2)
+FROM station
