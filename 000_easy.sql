@@ -71,3 +71,22 @@ FROM employees
 */
 SELECT ROUND(SUM(lat_n),2), ROUND(SUM(long_w),2)
 FROM station
+
+/*
+	Query the sum of Northern Latitudes (LAT_N) from STATION having values greater than 38.7880 and less than 137.2345.
+	Truncate your answer to 4 decimal places.
+*/
+SELECT ROUND(SUM(lat_n),4)
+FROM station
+WHERE lat_n > 38.7880 AND lat_n < 137.2345
+
+/*
+	Query the Western Longitude (LONG_W)
+	where the smallest Northern Latitude (LAT_N) in STATION is greater than 38.7780.
+	Round your answer to 4 decimal places.
+*/
+SELECT ROUND(long_w,4)
+FROM station
+WHERE lat_n > 38.7780
+ORDER BY lat_n
+LIMIT 1
